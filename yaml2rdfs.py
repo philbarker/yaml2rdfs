@@ -60,12 +60,22 @@ class Schema:
                     self.g.add((OER[aProperty], RDFS.comment, Literal(defn["comment"])))
                 if "range" in defn.keys():
                     for aRange in defn["range"]:
-                        self.g.add((OER[aProperty], SDO["rangeIncludes"], OER[aRange]))
+                        if aRange[:7] == "http://" :
+                            self.g.add(
+                                (OER[aProperty], SDO["rangeIncludes"], URIRef(aRange))
+                            )
+                        else :
+                            self.g.add((OER[aProperty], SDO["rangeIncludes"], OER[aRange]))
                 if "domain" in defn.keys():
-                    for aDomain in defn["range"]:
-                        self.g.add(
-                            (OER[aProperty], SDO["domainIncludes"], OER[aDomain])
-                        )
+                    for aDomain in defn["domain"]:
+                        if aDomain[:7] == "http://" :
+                            self.g.add(
+                                (OER[aProperty], SDO["domainIncludes"], URIRef(aDomain))
+                            )
+                        else :
+                            self.g.add(
+                                (OER[aProperty], SDO["domainIncludes"], OER[aDomain])
+                            )
             else:
                 pass  # honestly don't know why get blank keys
         print("INFO: yaml converted to RDFS graph")
